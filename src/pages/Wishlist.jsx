@@ -32,7 +32,7 @@ const Wishlist = () => {
 
 
     const proDetails = (product) => {
-        navigate('/product-details', { state: product })
+        navigate('/product-details', { state: product })   
     }
 
     const remove = (item) => {
