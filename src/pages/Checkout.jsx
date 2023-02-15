@@ -61,7 +61,7 @@ const Checkout = () => {
 
     let new4 = 0
     let total_Price2 = 0
-    const cartDetails = cart.forEach((i) => {
+    const cartDetails = cart.forEach((i) => { 
         console.log("i", i.PRICE * i.QTY);
         const new3 = ((i.QTY * i.DISCOUNT) );
         const total_Price1 = (i.PRICE * i.QTY);
