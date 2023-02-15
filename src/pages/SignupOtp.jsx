@@ -5,13 +5,20 @@ import axios from 'axios';
 import { Base_Url } from '../base_url/Base_Url';
 import { useEffect } from 'react';
 import { animateScroll } from 'react-scroll';
+import { RotatingLines } from 'react-loader-spinner';
+import { useForm } from 'react-hook-form';
 
 
 const SignupOtp = () => {
     const [OTP, setOTP] = useState("");
     const [resendOtp, setResendOtp] = useState("")
+    const [loading, setLoading] = useState(false)
+
 
     const location = useLocation()
+
+    const { handleSubmit } = useForm()
+
 
     const navigate = useNavigate()
 
@@ -32,9 +39,8 @@ const SignupOtp = () => {
     const singUp = () => {
         if(!OTP){
             return alert("Please Enter Valid OTP")
-        }
-        console.log(OTP);
-        console.log("otp.Master_Otp", otp.Master_Otp);
+        }else{
+            setLoading(true)
         if (OTP == otp.User_Otp || OTP == otp.Master_Otp || OTP == resendOtp) {
             return axios.post(`${Base_Url}/UserRegistration`,
                 {
@@ -65,6 +71,7 @@ const SignupOtp = () => {
                 localStorage.setItem("user_id", data.USER_ID);
                 localStorage.setItem("mobile", data.MOBILE_NO);
                 localStorage.setItem("email", data.EMAIL_ID);
+                setLoading(false)
                 navigate('/')
                     window.location.reload()
 
@@ -74,6 +81,7 @@ const SignupOtp = () => {
             alert("Please Enter Valid OTP")
             setOTP("")
         }
+    }
     }
 
     const resend = () => {
@@ -99,8 +107,15 @@ const SignupOtp = () => {
                                 <p style={{ textAlign: "center" }}>Check your Mobile for OTP</p>
                                 <p style={{ textAlign: "center", fontWeight: "bold" }}>+91 7263994600</p>
                                 <OTPInput value={OTP} onChange={setOTP} style={{ gap: "20px" }} autoFocus OTPLength={4} otpType="number" disabled={false} />
-                                <button className='col-sm-12' onClick={() => singUp()}>
-                                    Sign Up
+                                <button className='col-sm-12' disabled={loading} onClick={handleSubmit(singUp)}>
+                                {loading && <span style={{ marginLeft: "-21px", position: "relative", left: "42px" }}>
+                                                        <RotatingLines
+                                                            strokeColor="green"
+                                                            strokeWidth="4"
+                                                            animationDuration="0.75"
+                                                            width="21"
+                                                            visible={true}
+                                                        /></span>} Sign In Sign Up
                                 </button>
                                 <p>
                                     <span>

@@ -100,9 +100,9 @@ const Product_Details = () => {
                 "END": "10000000",
                 "WORD": "",
                 "GET_DATA": "Get_RelatedProducts",
-                "ID1": `${location.state.CAT_ID}`,
+                "ID1": '11',
                 "ID2": `1`,
-                "ID3": '1',
+                "ID3": '94',
                 "STATUS": "",
                 "START_DATE": "",
                 "END_DATE": "",
@@ -113,7 +113,7 @@ const Product_Details = () => {
             }
         ).then((res) => {
             console.log("res.data", res.data.DATA);
-            setReleted(res.data.DATA)
+            // setReleted(res.data.DATA)
 
         })
     }

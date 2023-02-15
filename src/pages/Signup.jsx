@@ -2,6 +2,8 @@ import { Pattern } from '@mui/icons-material'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { RotatingLines } from 'react-loader-spinner'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { animateScroll } from 'react-scroll'
 import { Base_Url } from '../base_url/Base_Url'
@@ -12,6 +14,8 @@ const Signup = () => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [mobile, setMobile] = useState("")
+    const [loading, setLoading] = useState(false)
+    const { handleSubmit } = useForm()
 
     const navigate = useNavigate()
 
@@ -45,7 +49,8 @@ const Signup = () => {
             return alert("Please all field is mondatory")
         } else if (!pattern.test(email)) {
             return alert("Please Enter Valid Email")
-        }
+        }else{
+            setLoading(true)
         axios.post(`${Base_Url}/OldUser`,
         {
             "MOBILE_NO": `${mobile}`,
@@ -68,14 +73,16 @@ const Signup = () => {
                 ).then((res) => {
                     console.log(res.data);
                     const data = res.data
+                    setLoading(false)
                     navigate('/signupotp',{state:{data, mobile, name, email}})
                 })
             }
+            
 
         })
 
        
-
+    }
 
     }
 
@@ -99,8 +106,15 @@ const Signup = () => {
                                     <input type="text" placeholder="Mobile" name='mobile' onChange={(e) => mobileNumber(e)} value={mobile} />
                                 </div>
 
-                                <button onClick={() => getOtp()} className='col-sm-12'>
-                                    Get OTP
+                                <button onClick={handleSubmit(getOtp)} disabled={loading} className='col-sm-12'>
+                                {loading && <span style={{ marginLeft: "-21px", position: "relative", left: "47px" }}>
+                                                <RotatingLines
+                                                strokeColor="green"
+                                                strokeWidth="4"
+                                                animationDuration="0.75"
+                                                width="21"
+                                                visible={true}
+                                            /></span>} Get OTP
                                 </button>
                                 <p>
                                     <span>

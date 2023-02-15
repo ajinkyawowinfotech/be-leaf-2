@@ -5,12 +5,17 @@ import axios from 'axios';
 import { Base_Url } from '../base_url/Base_Url';
 import { animateScroll } from 'react-scroll';
 import { useEffect } from 'react';
+import { RotatingLines } from 'react-loader-spinner';
+import { useForm } from 'react-hook-form';
 
 
 const SigninOtp = () => {
     const [OTP, setOTP] = useState("");
     const [resendOtp, setResendOtp] = useState("")
     const location = useLocation()
+    const [loading, setLoading] = useState(false)
+
+    const { handleSubmit } = useForm()
 
     const navigate = useNavigate()
 
@@ -31,9 +36,9 @@ const SigninOtp = () => {
     const singIn = () => {
         if(!OTP){
             return alert("Please Enter Valid OTP")
-        }
-        console.log(OTP);
-        console.log("otp.Master_Otp", otp.Master_Otp);
+        }else {
+            setLoading(true)
+     
         if (OTP == otp.User_Otp || OTP == otp.Master_Otp || OTP == resendOtp) {
             return axios.post(`${Base_Url}/UserRegistration`,
                 {
@@ -64,7 +69,7 @@ const SigninOtp = () => {
                 localStorage.setItem("user_id", data.USER_ID);
                 localStorage.setItem("email", data.EMAIL_ID);
                 localStorage.setItem("mobile", data.MOBILE_NO);
-
+                setLoading(false)
                 navigate('/')
                     window.location.reload()
 
@@ -74,6 +79,7 @@ const SigninOtp = () => {
             alert("Please Enter Valid OTP")
             setOTP("")
         }
+    }
     }
 
     const resend = () => {
@@ -99,11 +105,15 @@ const SigninOtp = () => {
                                 <p style={{ textAlign: "center" }}>Check your Mobile for OTP</p>
                                 <p style={{ textAlign: "center", fontWeight: "bold" }}>+91 {mobile}</p>
                                 <OTPInput value={OTP} onChange={setOTP} style={{ gap: "20px" }} autoFocus OTPLength={4} otpType="number" disabled={false} />
-                                <button className='col-sm-12' onClick={(e) => {
-                                    e.preventDefault()
-                                    singIn()
-                                }}>
-                                    Sign In
+                                <button className='col-sm-12' disabled={loading} onClick={handleSubmit(singIn)}>
+                                    {loading && <span style={{ marginLeft: "-21px", position: "relative", left: "42px" }}>
+                                                        <RotatingLines
+                                                            strokeColor="green"
+                                                            strokeWidth="4"
+                                                            animationDuration="0.75"
+                                                            width="21"
+                                                            visible={true}
+                                                        /></span>} Sign In
                                 </button>
                                 <p>
                                     <span>
