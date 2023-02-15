@@ -15,7 +15,9 @@ import { AuthContext } from '../AuthContext/AuthContext'
 
 
 const user_id = localStorage.getItem("user_id")
-// const total_Price = localStorage.getItem("total_price")
+const total_Price = localStorage.getItem("total_price")
+const shippingCharges = localStorage.getItem("shippCharges")
+
 const Checkout = () => {
     const [self, setSelf] = useState(false)
     const [gift, setGift] = useState(false)
@@ -31,6 +33,8 @@ const Checkout = () => {
     const [total_Pric, setTotal_Price] = useState("")
     const [giftname, setGiftname] = useState("")
     const [couponCode, setCouponCode] = useState([])
+    const [new10, setNew10] = useState("")
+
     const [inputButton, setInputButton] = useState({
         area: "", landmark: "", district: "", state: "", zipcode: ""
     })
@@ -40,9 +44,9 @@ const Checkout = () => {
     const dispatch = useDispatch()
     const location = useLocation()
     // console.log("total_price",location.state.total_price)
-    const total_Price = location.state.total_price
+    // const total_Price = location.state.total_price
 
-    const {applyCoupon, shippingCharges, setApplyCoupon} = useContext(AuthContext) 
+    const {applyCoupon, setApplyCoupon} = useContext(AuthContext) 
 
 
     useEffect(() => {
@@ -52,6 +56,8 @@ const Checkout = () => {
         
     }, [location.pathname])
     const Razorpay = useRazorpay()
+
+    
 
     let new4 = 0
     let total_Price2 = 0
@@ -87,7 +93,7 @@ const Checkout = () => {
 
     }
 
-    const total = `${(total_Price + shippingCharges) - (new4) - (coupon) - (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2)))}`
+    const total = `${applyCoupon.COUPEN_AMOUNT ? ((Number(total_Price)) + (Number(shippingCharges))) - (new4) - (Math.round(total_Price * applyCoupon.COUPEN_AMOUNT / 100)) - (walletInput === false ? (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2)))): (Number(total_Price)) + (Number(shippingCharges)) - (new4) - (coupon) - (walletInput === false ?  (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2))))}`
 
 
     const mobileNumber = (e) => {
@@ -439,7 +445,7 @@ const removeCoupon = () => {
                                 <div className="d-flex justify-content-between">
                                     <p>Applied Coupon Discount</p>
                                     {applyCoupon.COUPEN_AMOUNT ? (
-                                    <p>&#8377;{total_Price * applyCoupon.COUPEN_AMOUNT / 100}</p>
+                                    <p>&#8377;{Math.round(total_Price * applyCoupon.COUPEN_AMOUNT / 100)}</p>
                                     ) : (
                                         <p>{coupon}</p>
                                     )}
@@ -461,12 +467,15 @@ const removeCoupon = () => {
                                 <div className="d-flex justify-content-between mt-2">
                                     <h5>Grand Total</h5>
                                     {applyCoupon.COUPEN_AMOUNT ? (
-                                        <h5>&#8377;{(total_Price + shippingCharges) - (new4) - (total_Price * applyCoupon.COUPEN_AMOUNT / 100) - (walletInput === false ?
+                                        <>
+                                        <h5>&#8377;{(Number(total_Price)) + (Number(shippingCharges)) - (new4) - (Math.round(total_Price * applyCoupon.COUPEN_AMOUNT / 100)) - (walletInput === false ?
                                             (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2))))}</h5>
-                                    ) : (
-                                        <h5>&#8377;{(total_Price + shippingCharges) - (new4) - (coupon) - (walletInput === false ?
+                                   </> ) : (
+                                    <>
+                                    {/* <h5>{(Number(total_Price)) + (Number(shippingCharges))}</h5> */}
+                                        <h5>&#8377;{(Number(total_Price)) + (Number(shippingCharges)) - (new4) - (coupon) - (walletInput === false ?
                                             (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2))))}</h5>
-                                    )}
+                                   </> )}
                                     
                                     {/* Math.round((total_Price + shippingCharges) - (new4) - (coupon) - (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2)))) */}
                                 </div>

@@ -59,6 +59,7 @@ const Cart = () => {
     }
 
     const getProductData = () => {
+        setLoading(true)
         axios.post(`${Base_Url}/Get_Data`,
             {
                 "START": "0",
@@ -78,6 +79,8 @@ const Cart = () => {
             }
         ).then((res) => {
             setProductData(res.data.DATA)
+            setLoading(false)
+
         })
     }
     let priceCount = 0
@@ -259,6 +262,8 @@ const Cart = () => {
                 // console.log("total_price",total_price)
                 localStorage.setItem("total_price", total)
                 console.log("total_price", total)
+                localStorage.setItem("total_Price",total_price)
+                localStorage.setItem("shippCharges",shippCharges)
                 navigate('/checkout', { state: { total_price, shippCharges } })
 
             }
@@ -283,117 +288,119 @@ const Cart = () => {
                     </div>
                 </div>
             </div>
-
             <div className="container-fluid">
                 <div className="row px-xl-5">
                     <div className="col-lg-8 table-responsive mb-5">
-                        {cart.length === 0 && <h2>Cart is Empty</h2>}
-                        {cart.length >= 1 && <table className="table table-light table-borderless table-hover  mb-0">
-                            <thead className="thead-dark" >
-                                <tr >
-                                    <th>Image</th>
-                                    <th style={{ textAlign: "center" }}>Name</th>
-                                    <th style={{ textAlign: "center" }}>Qty</th>
-                                    <th style={{ textAlign: "center" }}>Price</th>
-                                    <th style={{ textAlign: "center" }}>Actual Amt</th>
-                                    <th style={{ textAlign: "center" }}>Remove</th>
-                                </tr>
-                            </thead>
-                            <tbody className="align-middle">
+                        {cart.length >= 1 ?
+                            (<table className="table table-light table-borderless table-hover  mb-0">
+                                <thead className="thead-dark" >
+                                    <tr >
+                                        <th>Image</th>
+                                        <th style={{ textAlign: "center" }}>Name</th>
+                                        <th style={{ textAlign: "center" }}>Qty</th>
+                                        <th style={{ textAlign: "center" }}>Price</th>
+                                        <th style={{ textAlign: "center" }}>Actual Amt</th>
+                                        <th style={{ textAlign: "center" }}>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="align-middle">
 
-                                {productData.map((product, index) => {
-                                    return (
-                                        <tr key={index} style={{ borderBottom: "1px groove #D3D3D3" }}>
-                                            <td className="align-middle">
-                                                {product.PRODUCT_STATUS === 'Out Of Stock' &&
-                                                    <>
-                                                        <img src={product.PRODUCT_IMAGE === null ? logo : product.PRODUCT_IMAGE} alt="" style={{ width: "50px" }} /> <span><img src={sold} alt="" className='sold' /></span>
-                                                    </>}
-                                                {product.PRODUCT_STATUS === 'In Stock' &&
-                                                    <>
-                                                        <img src={product.PRODUCT_IMAGE === null ? logo : product.PRODUCT_IMAGE} alt="" style={{ width: "50px" }} />
-                                                    </>}
-                                            </td>
-                                            <td className="align-middle " style={{ textAlign: "center" }}>{product.PRODUCT_NAME.slice(0, 12)}</td>
-                                            <td className="align-middle" style={{ textAlign: "center" }}>
-                                                <div className="input-group quantity mx-auto" style={{ width: "100px", border: "none" }}>
-                                                    <div className="input-group-btn">
-                                                        <button className="btn btn-sm btn-primary btn-minus" style={{ background: "white", border: "1px solid green" }} onClick={() => {
+                                    {productData.map((product, index) => {
+                                        return (
+                                            <tr key={index} style={{ borderBottom: "1px groove #D3D3D3" }}>
+                                                <td className="align-middle">
+                                                    {product.PRODUCT_STATUS === 'Out Of Stock' &&
+                                                        <>
+                                                            <img src={product.PRODUCT_IMAGE === null ? logo : product.PRODUCT_IMAGE} alt="" style={{ width: "50px" }} /> <span><img src={sold} alt="" className='sold' /></span>
+                                                        </>}
+                                                    {product.PRODUCT_STATUS === 'In Stock' &&
+                                                        <>
+                                                            <img src={product.PRODUCT_IMAGE === null ? logo : product.PRODUCT_IMAGE} alt="" style={{ width: "50px" }} />
+                                                        </>}
+                                                </td>
+                                                <td className="align-middle " style={{ textAlign: "center" }}>{product.PRODUCT_NAME.slice(0, 12)}</td>
+                                                <td className="align-middle" style={{ textAlign: "center" }}>
+                                                    <div className="input-group quantity mx-auto" style={{ width: "100px", border: "none" }}>
+                                                        <div className="input-group-btn">
+                                                            <button className="btn btn-sm btn-primary btn-minus" style={{ background: "white", border: "1px solid green" }} onClick={() => {
 
-                                                            if (product.QTY === 1) {
-                                                                return setQty(1),
-                                                                    alert("Minimum quantity is 1")
-                                                            } else {
-                                                                setQty(product.QTY -= 1)
+                                                                if (product.QTY === 1) {
+                                                                    return setQty(1),
+                                                                        alert("Minimum quantity is 1")
+                                                                } else {
+                                                                    setQty(product.QTY -= 1)
 
-                                                                axios.post(`${Base_Url}/Cart`,
-                                                                    {
-                                                                        "USER_ID": `${user_id}`,
-                                                                        "PRODUCT_ID": `${product.PRODUCT_ID}`,
-                                                                        "PS_ID": `${product.PRODUCT_ID}`,
-                                                                        "QTY": `${product.QTY}`,
-                                                                        "TASK": "EDIT",
-                                                                        "CART_ID": "1",
-                                                                        "EXTRA1": "",
-                                                                        "EXTRA2": "",
-                                                                        "EXTRA3": "",
-                                                                        "LANG_ID": ""
-                                                                    }
-                                                                ).then((res) => {
-                                                                    console.log(res.data);
-                                                                    getProductData()
-                                                                })
-                                                            }
-                                                        }} >
-                                                            <i className="fa fa-minus" style={{ color: "green" }}></i>
-                                                        </button>
+                                                                    axios.post(`${Base_Url}/Cart`,
+                                                                        {
+                                                                            "USER_ID": `${user_id}`,
+                                                                            "PRODUCT_ID": `${product.PRODUCT_ID}`,
+                                                                            "PS_ID": `${product.PRODUCT_ID}`,
+                                                                            "QTY": `${product.QTY}`,
+                                                                            "TASK": "EDIT",
+                                                                            "CART_ID": "1",
+                                                                            "EXTRA1": "",
+                                                                            "EXTRA2": "",
+                                                                            "EXTRA3": "",
+                                                                            "LANG_ID": ""
+                                                                        }
+                                                                    ).then((res) => {
+                                                                        console.log(res.data);
+                                                                        getProductData()
+                                                                    })
+                                                                }
+                                                            }} >
+                                                                <i className="fa fa-minus" style={{ color: "green" }}></i>
+                                                            </button>
+                                                        </div>
+                                                        <p className='text-center form-control' style={{ border: "none" }}>{product.QTY}</p>
+                                                        <div className="input-group-btn">
+                                                            <button className="btn btn-sm btn-primary btn-plus" style={{ background: "white", border: "1px solid green" }} onClick={() => {
+                                                                console.log("product.QTY", product.QTY);
+                                                                if (product.QTY === product.AVAILABLE_QTY) {
+                                                                    return setQty(product.AVAILABLE_QTY),
+                                                                        alert(`Max quantity is ${product.AVAILABLE_QTY}`)
+                                                                } else {
+                                                                    setQty(product.QTY++)
+                                                                    axios.post(`${Base_Url}/Cart`,
+                                                                        {
+                                                                            "USER_ID": `${user_id}`,
+                                                                            "PRODUCT_ID": `${product.PRODUCT_ID}`,
+                                                                            "PS_ID": `${product.PRODUCT_ID}`,
+                                                                            "QTY": `${product.QTY}`,
+                                                                            "TASK": "EDIT",
+                                                                            "CART_ID": "1",
+                                                                            "EXTRA1": "",
+                                                                            "EXTRA2": "",
+                                                                            "EXTRA3": "",
+                                                                            "LANG_ID": ""
+                                                                        }
+                                                                    ).then((res) => {
+                                                                        console.log(res.data);
+                                                                        getProductData()
+                                                                    })
+                                                                }
+                                                            }}>
+                                                                <i className="fa fa-plus" style={{ color: "green" }}></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <p className='text-center form-control' style={{ border: "none" }}>{product.QTY}</p>
-                                                    <div className="input-group-btn">
-                                                        <button className="btn btn-sm btn-primary btn-plus" style={{ background: "white", border: "1px solid green" }} onClick={() => {
-                                                            console.log("product.QTY", product.QTY);
-                                                            if (product.QTY === product.AVAILABLE_QTY) {
-                                                                return setQty(product.AVAILABLE_QTY),
-                                                                    alert(`Max quantity is ${product.AVAILABLE_QTY}`)
-                                                            } else {
-                                                                setQty(product.QTY++)
-                                                                axios.post(`${Base_Url}/Cart`,
-                                                                    {
-                                                                        "USER_ID": `${user_id}`,
-                                                                        "PRODUCT_ID": `${product.PRODUCT_ID}`,
-                                                                        "PS_ID": `${product.PRODUCT_ID}`,
-                                                                        "QTY": `${product.QTY}`,
-                                                                        "TASK": "EDIT",
-                                                                        "CART_ID": "1",
-                                                                        "EXTRA1": "",
-                                                                        "EXTRA2": "",
-                                                                        "EXTRA3": "",
-                                                                        "LANG_ID": ""
-                                                                    }
-                                                                ).then((res) => {
-                                                                    console.log(res.data);
-                                                                    getProductData()
-                                                                })
-                                                            }
-                                                        }}>
-                                                            <i className="fa fa-plus" style={{ color: "green" }}></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="align-middle" style={{ textAlign: "center" }}>&#8377;{Math.round((product.PRICE * product.QTY) - ((product.PRICE * product.QTY) * product.DISCOUNT / 100))}</td>
-                                            <td className="align-middle" style={{ textAlign: "center" }}>&#8377;<del>{Math.round(product.PRICE * product.QTY)}</del></td>
-                                            <td className="align-middle" style={{ textAlign: "center" }}>
-                                                <a className="del-goods1" style={{ color: "red" }} onClick={() => removeItem(product)}><svg style={{ cursor: "pointer" }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3" viewBox="0 0 16 16">
-                                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
-                                                </svg>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>}
+                                                </td>
+                                                <td className="align-middle" style={{ textAlign: "center" }}>&#8377;{Math.round((product.PRICE * product.QTY) - ((product.PRICE * product.QTY) * product.DISCOUNT / 100))}</td>
+                                                <td className="align-middle" style={{ textAlign: "center" }}>&#8377;<del>{Math.round(product.PRICE * product.QTY)}</del></td>
+                                                <td className="align-middle" style={{ textAlign: "center" }}>
+                                                    <a className="del-goods1" style={{ color: "red" }} onClick={() => removeItem(product)}><svg style={{ cursor: "pointer" }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3" viewBox="0 0 16 16">
+                                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
+                                                    </svg>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>) : (
+                                <h2>Cart is Empty</h2>
+
+                            )}
                     </div>
                     {cart.length >= 1 && <div className="col-lg-4">
                         <div className="seven">
