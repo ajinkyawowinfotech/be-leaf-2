@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Carousel } from 'react-responsive-carousel';
 import { AuthContext } from '../AuthContext/AuthContext';
 import { RotatingLines } from 'react-loader-spinner';
+import { useSelector } from 'react-redux';
 
 
 
@@ -21,7 +22,8 @@ const Product_Details = () => {
     const [video, setVideo] = useState([])
     const [releted, setReleted] = useState([])
     const location = useLocation()
-    console.log(location.state);
+    console.log("location.state",location.state)
+    const productDetail = location.state
 
     const { loading, setLoading } = useContext(AuthContext)
 
@@ -35,7 +37,7 @@ const Product_Details = () => {
         getVideo()
         getReletedProducts()
         getProductImg()
-    }, [])
+    }, [productDetail])
 
 
     const navigate = useNavigate()
@@ -102,7 +104,7 @@ const Product_Details = () => {
                 "GET_DATA": "Get_RelatedProducts",
                 "ID1": '11',
                 "ID2": `1`,
-                "ID3": '94',
+                "ID3": `${location.state.PRODUCT_ID}`,
                 "STATUS": "",
                 "START_DATE": "",
                 "END_DATE": "",
@@ -113,7 +115,7 @@ const Product_Details = () => {
             }
         ).then((res) => {
             console.log("res.data", res.data.DATA);
-            // setReleted(res.data.DATA)
+            setReleted(res.data.DATA)      
 
         })
     }
@@ -136,6 +138,9 @@ const Product_Details = () => {
 
     }
 
+    const {wishlist} = useSelector((state) => state.wishlist)
+
+
     const minusButton = () => {
         if (count <= 1) {
             return setCount(1),
@@ -144,6 +149,39 @@ const Product_Details = () => {
         } else {
             setCount(count - 1)
         }
+    }
+
+    const wishlist1 = (product) => {
+        console.log("product", product);
+        axios.post(`${Base_Url}/Update_Data`,
+            {
+                "TASK": "AddRemoveFavouriteProduct",
+                "ID1": `${user_id}`,
+                "ID2": `${product.PRODUCT_ID}`,
+                "ID3": "",
+                "STATUS": "",
+                "DATE1": "",
+                "DATE2": "",
+                "EXTRA1": "",
+                "EXTRA2": "",
+                "EXTRA3": "",
+                "EXTRA4": "",
+                "EXTRA5": "",
+                "LANG_ID": ""
+            }
+        ).then((res) => {
+            console.log(res.data.DATA);
+    
+        })
+    }
+
+    
+    const proDetails = (product) => {
+        animateScroll.scrollToTop({
+            duration: 0
+        })
+        navigate('/product-details', { state: product })
+       
     }
 
     const addToCart = (product) => {
@@ -213,34 +251,24 @@ const Product_Details = () => {
                                 </div>
                             ) : (
                                 <div>
-                                <Carousel infiniteLoop autoPlay useKeyboardArrows dynamicHeight>
-                                    {product_img.map((product, index) => {
-                                        return (
-                                            <div key={index}  >
-                                                <img className="w-100 h-100" src={product.PRODUCT_IMAGE} alt="Image" />
-                                            </div>
-                                        )
-                                    })}
+                                    <Carousel infiniteLoop autoPlay useKeyboardArrows dynamicHeight>
+                                        {product_img.map((product, index) => {
+                                            return (
+                                                <div key={index}  >
+                                                    <img className="w-100 h-100" src={product.PRODUCT_IMAGE} alt="Image" />
+                                                </div>
+                                            )
+                                        })}
 
 
-                                </Carousel>
+                                    </Carousel>
 
-                                {location.state.PRODUCT_IMAGE === null && 
-                                <>
-                                <img className="w-100 h-100" src={logo} />
-                            </>}
-                            </div>
+                                    {location.state.PRODUCT_IMAGE === null &&
+                                        <>
+                                            <img className="w-100 h-100" src={logo} />
+                                        </>}
+                                </div>
                             )}
-
-
-
-                            {/* </div> */}
-                            {/* <a className="carousel-control-prev" href="#product-carousel" data-slide="prev">
-                                <i className="fa fa-2x fa-angle-left text-dark"></i>
-                            </a>
-                            <a className="carousel-control-next" href="#product-carousel" data-slide="next">
-                                <i className="fa fa-2x fa-angle-right text-dark"></i>
-                            </a> */}
 
                         </div>
 
@@ -319,43 +347,61 @@ const Product_Details = () => {
                                 </div>
                                 <div className="tab-pane fade" id="tab-pane-3">
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-12">
                                             <h4 className="mb-4">Releted Products</h4>
-                                            <h1>Sorry, No Data Found</h1>
-                                            {/* {releted.map((product) => {
-                                                console.log("product Releted", product);
+                                            {/* <h1>Sorry, No Data Found</h1> */}
+                                            <div className="row">
+                                            {releted.map((product, index) => {
                                                 return (
-                                                    <div className="media mb-4">
-                                                        <img src="img/user.jpg" alt="Image" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                                                        <div className="media-body">
-                                                            <h6>Hello ajinkya</h6>
-                                                            <div className="text-primary mb-2">
-                                                                <i className="fas fa-star"></i>
-                                                                <i className="fas fa-star"></i>
-                                                                <i className="fas fa-star"></i>
-                                                                <i className="fas fa-star-half-alt"></i>
-                                                                <i className="far fa-star"></i>
+                                                    <div className="col-lg-3 col-md-4 col-sm-6 col-6 pb-1" key={index}>
+                                                        <div className="product-item bg-light mb-4" style={{ cursor: "pointer" }}>
+
+                                                            {user_id && <>
+                                                                {wishlist.map((i) => {
+
+                                                                    return (
+                                                                        <>
+                                                                            {i.PRODUCT_ID === product.PRODUCT_ID && <a className="" >
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16" style={{ color: "red" }} onClick={() => wishlist1(product)}>
+                                                                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                                                                                </svg>
+                                                                            </a>}
+                                                                            {i.PRODUCT_ID !== product.PRODUCT_ID && <a className="" >
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16" style={{ color: "red" }} onClick={() => wishlist1(product)}>
+                                                                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                                                                                </svg>
+                                                                            </a>}
+
+                                                                        </>
+                                                                    )
+                                                                })}
+                                                            </>}
+
+
+
+
+
+                                                            <div className="product-img position-relative overflow-hidden" onClick={() => proDetails(product)}>
+                                                                <img className="img-fluid w-100 " src={product.PRODUCT_IMAGE === null ? logo : product.PRODUCT_IMAGE} alt="" />
+
                                                             </div>
-                                                            <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
+                                                            <div className="text-center py-4" style={{ borderBottom: "2px solid green", backgroundColor: "#ffffff", borderRadius: "6px" }} onClick={() => proDetails(product)}>
+                                                                <a className="h6 text-decoration-none text-truncate" >{product.PRODUCT_NAME.slice(0, 12)}</a>
+                                                                <div className="d-flex align-items-center justify-content-center mt-2">
+                                                                    <h5>&#8377;{(product.PRICE) - (product.DISCOUNT)}</h5><h6 className="text-muted ml-2"><del>&#8377;{product.PRICE}</del></h6>
+                                                                </div>
+
+                                                            </div>
+                                                            <div className="product-action" onClick={() => proDetails(product)} s>
+                                                                <a className=""  ><i className="fa fa-shopping-cart"></i></a>
+
+                                                            </div>
                                                         </div>
+
                                                     </div>
                                                 )
-                                            })} */}
-
-                                            {/* <div className="media mb-4">
-                                                <img src="img/user.jpg" alt="Image" className="img-fluid mr-3 mt-1" style={{ width: "45px" }} />
-                                                <div className="media-body">
-                                                    <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
-                                                    <div className="text-primary mb-2">
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star-half-alt"></i>
-                                                        <i className="far fa-star"></i>
-                                                    </div>
-                                                    <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
-                                                </div>
-                                            </div> */}
+                                            })}
+                                            </div>
                                         </div>
 
                                     </div>

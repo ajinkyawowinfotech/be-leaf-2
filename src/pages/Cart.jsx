@@ -108,7 +108,7 @@ const Cart = () => {
         getProduct()
         // getProductData()
         cart.forEach((i) => {
-            const data = Math.round((i.PRICE * i.QTY) - ((i.PRICE * i.QTY) * i.DISCOUNT / 100))
+            const data = Math.round((i.PRICE * i.QTY) - ((i.QTY * i.DISCOUNT)))
             priceCount += data
             const data1 = (i.PRICE * i.QTY)
             total_price += data1
@@ -385,7 +385,7 @@ const Cart = () => {
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="align-middle" style={{ textAlign: "center" }}>&#8377;{Math.round((product.PRICE * product.QTY) - ((product.PRICE * product.QTY) * product.DISCOUNT / 100))}</td>
+                                                <td className="align-middle" style={{ textAlign: "center" }}>&#8377;{Math.round((product.PRICE * product.QTY) - (product.QTY * product.DISCOUNT ))}</td>
                                                 <td className="align-middle" style={{ textAlign: "center" }}>&#8377;<del>{Math.round(product.PRICE * product.QTY)}</del></td>
                                                 <td className="align-middle" style={{ textAlign: "center" }}>
                                                     <a className="del-goods1" style={{ color: "red" }} onClick={() => removeItem(product)}><svg style={{ cursor: "pointer" }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3" viewBox="0 0 16 16">

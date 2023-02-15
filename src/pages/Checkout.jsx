@@ -63,11 +63,11 @@ const Checkout = () => {
     let total_Price2 = 0
     const cartDetails = cart.forEach((i) => {
         console.log("i", i.PRICE * i.QTY);
-        const new3 = ((i.PRICE * i.QTY) * i.DISCOUNT / 100);
+        const new3 = ((i.QTY * i.DISCOUNT) );
         const total_Price1 = (i.PRICE * i.QTY);
         total_Price2 += total_Price1
         new4 += new3
-        // console.log("new3",new4);
+        console.log("new3",new3);
         // setSaveAmount(new4)
         console.log("total_Price2",total_Price2)
         // setTotal_Price(total_Price2)
@@ -93,7 +93,7 @@ const Checkout = () => {
 
     }
 
-    const total = `${applyCoupon.COUPEN_AMOUNT ? ((Number(total_Price)) + (Number(shippingCharges))) - (new4) - (Math.round(total_Price * applyCoupon.COUPEN_AMOUNT / 100)) - (walletInput === false ? (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2)))): (Number(total_Price)) + (Number(shippingCharges)) - (new4) - (coupon) - (walletInput === false ?  (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2))))}`
+    const total = `${applyCoupon.COUPEN_AMOUNT ? ((Number(total_Price) + Number(shippingCharges))) - (new4) - (Math.round(total_Price * applyCoupon.COUPEN_AMOUNT / 100)) - (walletInput === false ? (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2)))): (Number(total_Price)) + (Number(shippingCharges)) - (new4) - (coupon) - (walletInput === false ?  (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2))))}`
 
 
     const mobileNumber = (e) => {
@@ -468,12 +468,12 @@ const removeCoupon = () => {
                                     <h5>Grand Total</h5>
                                     {applyCoupon.COUPEN_AMOUNT ? (
                                         <>
-                                        <h5>&#8377;{(Number(total_Price)) + (Number(shippingCharges)) - (new4) - (Math.round(total_Price * applyCoupon.COUPEN_AMOUNT / 100)) - (walletInput === false ?
+                                        <h5>&#8377;{(Number(total_Price) + Number(shippingCharges)) - (new4) - (Math.round(total_Price * applyCoupon.COUPEN_AMOUNT / 100)) - (walletInput === false ?
                                             (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2))))}</h5>
                                    </> ) : (
                                     <>
                                     {/* <h5>{(Number(total_Price)) + (Number(shippingCharges))}</h5> */}
-                                        <h5>&#8377;{(Number(total_Price)) + (Number(shippingCharges)) - (new4) - (coupon) - (walletInput === false ?
+                                        <h5>&#8377;{(Number(total_Price) + Number(shippingCharges)) - (new4) - (coupon) - (walletInput === false ?
                                             (0) : (wallet >= total_Price ? (Math.round(total_Price / 2)) : (Math.round(wallet / 2))))}</h5>
                                    </> )}
                                     

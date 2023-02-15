@@ -77,18 +77,9 @@ const NewlaunchProducts = () => {
         
     }
 
-    let wishlistProductId
 
     const {wishlist} = useSelector((state) => state.wishlist)
-    // console.log("wishlist",wishlist)
-
-    // wishlist.map((i) => {
-    //     // console.log("Wishlist.PRODUCT_ID",i.PRODUCT_ID)
-
-    //     wishlistProductId = i.PRODUCT_ID
-    // })
-
-    // console.log("wishlistProductId")
+   
 
 
     useEffect(() => {
