@@ -369,7 +369,7 @@ const Cart = () => {
                                                                             "QTY": `${product.QTY}`,
                                                                             "TASK": "EDIT",
                                                                             "CART_ID": "1",
-                                                                            "EXTRA1": "",
+                                                                             "EXTRA1": "",
                                                                             "EXTRA2": "",
                                                                             "EXTRA3": "",
                                                                             "LANG_ID": ""
