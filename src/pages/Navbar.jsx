@@ -226,7 +226,7 @@ const Navbar = () => {
                     </div>
                     <div className="col-lg-4 col-6 text-right">
                         <p className="m-0">Contact Us</p>
-                        <h5 className="m-0" style={{cursor:"pointer"}}><a href="tel:8459227864">+91 8459227864</a></h5>
+                        <h5 className="m-0" style={{cursor:"pointer"}}><a href="tel:8459227864">+91 7263994600</a></h5>
                     </div>
                 </div>
             </div>
