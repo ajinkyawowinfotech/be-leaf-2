@@ -254,7 +254,7 @@ const Product_Details = () => {
 
 
                             <div style={{ display: "flex", gap: "15px" }}>
-                                <h3 className="font-weight-semi-bold mb-4">&#8377;{(location.state.PRICE) - (location.state.PRICE * location.state.DISCOUNT / 100)}</h3>
+                                <h3 className="font-weight-semi-bold mb-4">&#8377;{(location.state.PRICE) - (location.state.DISCOUNT)}</h3>
                                 <h4 className="font-weight-semi-bold mb-4"><s>&#8377;{location.state.PRICE}</s></h4>
                             </div>
                             <p>{`( Size - ${location.state.SIZE} Inch )`}</p>

@@ -23,7 +23,7 @@ const Complaint = () => {
     const [newImage, setNewImage] = useState("")
     const [categoty, setCategory] = useState([])
     const [cat_name, setCat_Name] = useState("")
-
+    const [modal, setModal] = useState("")
     const location = useLocation()
     useEffect(() => {
         animateScroll.scrollToTop({
@@ -181,14 +181,14 @@ const Complaint = () => {
         ).then((res) => {
             console.log(res.data)
             toast.success("complaint send succesfully")
-            complaintHandl2()
+            setModal("modal")
             setCat_Name("")
             setDiscription("")
             setNewImage("")
         })
 
 
-
+console.log("modal",modal);
 
     }
 
@@ -215,7 +215,7 @@ const Complaint = () => {
                     <div className="col-4" >
                         <nav className="breadcrumb bg-light mb-30" style={{ background: "transparent", float: "right", marginRight: "10px" }}>
                             <div className="two">
-                                <button className='btn' style={{ color: "white", background: "#4c8f4b", borderRadius: "5px" }} onClick={complaintHandle1}>ADD COMPLAINT</button>
+                                <button className='btn' style={{ color: "white", background: "#4c8f4b", borderRadius: "5px" }} data-toggle="modal" data-target="#exampleModalCenter" >ADD COMPLAINT</button>
                             </div>
                         </nav>
                     </div>
@@ -284,42 +284,40 @@ const Complaint = () => {
                 </section>
             )}
 
-            <Modal
 
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...style, width: 270 }} style={{ background: "transparent" }}>
-                    <img src={Image} alt="Image Not Found" style={{ width: "200px", }} />
-                </Box>
-            </Modal>
-            <Modal
-                className='table-responsive'
-                open={addComplaint}
-                onClose={complaintHandl2}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...style1, width: 400 }} style={{ borderRadius: "5px" }}>
-                    <h1>Send Complaint</h1>
-                    <select onClick={(e) => setCat_Name(e.target.value)} className="form-select" aria-label="Default select example" style={{ height: "40px", width: "100%", marginTop: "1rem" }}>
-                        <option selected >Select Complaint Type</option>
-                        {categoty.map((i, index) => {
-                            return (
 
-                                <option key={index} >{i.CM_NAME}</option>
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle"> Send Complaint</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <select onClick={(e) => setCat_Name(e.target.value)} className="form-select" aria-label="Default select example" style={{ height: "40px", width: "100%", marginTop: "1rem" }}>
+                                <option selected >Select Complaint Type</option>
+                                {categoty.map((i, index) => {
+                                    return (
 
-                            )
-                        })}
-                    </select>
-                    <textarea placeholder='Enter Message' value={discription} onChange={(e) => setDiscription(e.target.value)} cols="42" rows="5" style={{ marginTop: "1rem", resize: "none" }}></textarea>
-                    <label style={{ marginBottom: "-0.3rem", fontWeight: "bold", color: "rgb(76, 143, 75)" }}>Photo</label>
-                    <input type="file" id='file' accept='image/*' style={{ marginTop: "0.5rem" }} onChange={(e) => newUpload(e)} />
-                    <input type="button" onClick={() => sendComplaint()} value="Submit" style={{ marginTop: "1rem", width: "100%", fontSize: "22px", background: "rgb(76, 143, 75)", color: "white", border: "none", borderRadius: "5px" }} />
-                </Box>
-            </Modal>
+                                        <option key={index} >{i.CM_NAME}</option>
+
+                                    )
+                                })}
+                            </select>
+                            <textarea placeholder='Enter Message' value={discription} onChange={(e) => setDiscription(e.target.value)} rows="5" style={{ marginTop: "1rem", resize: "none", width: "100%" }}></textarea>
+                            <label style={{ marginBottom: "-0.3rem", fontWeight: "bold", color: "rgb(76, 143, 75)" }}>Photo</label><br />
+                            <input type="file" id='file' accept='image/*' style={{ marginTop: "0.5rem" }} onChange={(e) => newUpload(e)} />
+                            <input type="button" data-dismiss={modal} onClick={() => sendComplaint()} value="Submit" style={{ marginTop: "1rem", width: "100%", fontSize: "22px", background: "rgb(76, 143, 75)", color: "white", border: "none", borderRadius: "5px" }} />
+                        </div>
+                        {/* <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div> */}
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

@@ -95,8 +95,8 @@ const RewardWallet = () => {
                     </div>
                 </div>
             </div>
-            <div className='row px-xl-5'>
-                <div className="col-lg-12">
+            <div className='row justify-content-center px-xl-5'>
+                <div className="col-lg-6">
                     <div className="imagediv">
                         <img src={wallet} alt="Image Not Found" className='walletImage img-fluid' />
                         <h4 style={{ fontWeight: "bold", color: "#158715" }}>Available Amount In Your Wallet</h4>

@@ -187,7 +187,7 @@ const Navbar = () => {
                             </div>
                         </div>
                         <div className="d-inline-flex align-items-center d-block d-lg-none">
-                            {data ? (
+                            {data && (
                                 <>
                                     <a className="btn px-0 ml-2" style={{ background: "transparent" }} onClick={() => navigate('/wishlist')}>
                                         <i className="fas fa-heart text-dark" ></i>
@@ -201,19 +201,7 @@ const Navbar = () => {
                                         &nbsp;&nbsp;<span className="badge text-dark border border-dark rounded-circle" style={{ paddingBottom: "2px" }} >{cart.length === 0 ? "" : cart.length}</span>
                                     </a>
                                 </>
-                            ) : (
-                                <>
-                                    <a className="btn px-0 ml-2"
-                                        style={{ background: "transparent" }}>
-                                        <i className="fas fa-heart text-dark" ></i>
-                                        {/* <span className="badge text-dark border border-dark rounded-circle" style={{ paddingBottom: "2px" }}>{wishlist.length}</span> */}
-                                    </a>
-                                    <a className="btn px-0 ml-2" style={{ background: "transparent" }}>
-                                        <i className="fas fa-shopping-cart text-dark"></i>
-                                        {/* &nbsp;&nbsp;<span className="badge text-dark border border-dark rounded-circle" style={{ paddingBottom: "2px" }}>{cart.length}</span> */}
-                                    </a>
-                                </>
-                            )}
+                            ) }
 
                         </div>
                     </div>
@@ -408,7 +396,7 @@ const Navbar = () => {
 
                                 </div>
                                 <div className="navbar-nav ml-auto py-0 d-none d-lg-block">
-                                    {data ?
+                                    {data &&
                                         (
                                             <>
                                                 <a className="btn px-0" style={{ background: "none" }} onClick={() => navigate('/wishlist')}>
@@ -420,16 +408,7 @@ const Navbar = () => {
                                                     <span className="badge text-secondary border border-secondary rounded-circle" style={{ paddingBottom: "2px" }}>{cart.length === 0 ? "" : cart.length}</span>
                                                 </a>
                                             </>
-                                        ) : (
-                                            <>
-                                                <a className="btn px-0" style={{ background: "none" }}>
-                                                    <i className="fas fa-heart text-primary"  ></i> &nbsp;
-                                                </a>
-                                                <a className="btn px-0 ml-3" style={{ background: "none" }}>
-                                                    <i className="fas fa-shopping-cart text-primary" ></i> &nbsp;
-                                                </a>
-                                            </>
-                                        )}
+                                        ) }
                                 </div>
                             </div>
                         </nav>
